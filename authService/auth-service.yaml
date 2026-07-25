@@ -1,0 +1,68 @@
+openapi: 3.2.0
+info:
+  title: auth-service
+  version: 1.0.0
+  description: |
+    auth-service is an identity provider to authenticate and authorize clients
+  contact:
+    name: Raj, Pushp
+    email: pushp277@gmail.com
+servers:
+  - description: |
+      local-system
+    url: http://localhost:3003/
+
+paths:
+  /api/v1/create:
+    post:
+      description: create new user
+      operationId: createUser
+      requestBody:
+        description: |
+          info regarding create User endpoint
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  minLength: 3
+                firstName:
+                  type: string
+                  minLength: 1
+                lastName:
+                  type: string
+                  minLength: 1
+                dateOfBirth:
+                  type: date
+                password:
+                  type: password
+                contactDetails:
+                  type: object
+                  properties:
+                    
+                
+
+      response:
+        '201':
+          description: reponse success and redirect to login screen
+  /api/v1/authorize:
+    post:
+  /api/v1/token:
+    get:
+      response:
+        201:
+          description: ""
+
+  /api/v1/refresh:
+    get:
+      response:
+        201:
+          description: ""
+  /api/v1/login:
+    post:
+      description: client login
+  /api/v1/logout:
+    post:
+      description: client logout
