@@ -1,4 +1,4 @@
-openapi: 3.2.0
+openapi: 3.1.0
 info:
   title: auth-service
   version: 1.0.0
@@ -114,6 +114,7 @@ paths:
       tags:
         - Clients
       summary: exchange access_code
+      operationId: exchangeToken
       description: exhange access_code for accessToken and refreshToken
       requestBody:
         content:
@@ -139,6 +140,7 @@ paths:
   /api/v1/refresh:
     post:
       summary: generate accessToken and refreshToken
+      operationId: generateRefreshToken
       tags:
         - Clients
       requestBody:
@@ -160,6 +162,7 @@ paths:
     post:
       tags:
         - Clients
+      operationId: logoutUser
       description: client logout
       parameters:
         - name: sessionCookie
