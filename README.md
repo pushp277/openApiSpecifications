@@ -10,6 +10,6 @@ docker run --rm \
   -i /local/auth-service.yaml \
   -g spring \
   -o /local/target \
-  --additional-properties=useSpringBoot3=true,interfaceOnly=true,useJakartaEe=true,javaVersion=21 \
+  --additional-properties=apiPackage=org.sageDelta.auth_service.api,modelPackage=org.sageDelta.auth_service.model,useSpringBoot3=true,interfaceOnly=true,useJakartaEe=true,javaVersion=21 \
    --skip-validate-spec
 ```
