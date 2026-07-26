@@ -8,6 +8,7 @@ info:
     name: Raj, Pushp
     email: pushp277@gmail.com
 servers:
+  # Added by API Auto Mocking Plugin
   - description: |
       local-system
     url: http://localhost:3003/
@@ -15,54 +16,303 @@ servers:
 paths:
   /api/v1/create:
     post:
-      description: create new user
-      operationId: createUser
+      tags:
+        - Clients
+      operationId: createNewUser
+      summary: create new user
+      parameters:
+        - name: Host
+          in: header
+          required: true
+          schema:
+            type: string
+            format: uri
+
       requestBody:
+        required: true
         description: |
           info regarding create User endpoint
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                  minLength: 3
-                firstName:
-                  type: string
-                  minLength: 1
-                lastName:
-                  type: string
-                  minLength: 1
-                dateOfBirth:
-                  type: date
-                password:
-                  type: password
-                contactDetails:
-                  type: object
-                  properties:
-                    
-                
+              $ref: "#/components/schemas/User"
 
-      response:
-        '201':
-          description: reponse success and redirect to login screen
+      responses:
+        '302':
+          summary: redirect to login
+          description: redirect user to login page
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+                example: /login
+        '400':
+          summary: bad requirest
+          description: user already exists or any field is missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateNewUserError'
+
+
   /api/v1/authorize:
-    post:
-  /api/v1/token:
     get:
-      response:
-        201:
-          description: ""
+      tags:
+        - Clients
+      summary: authorize user
+      operationId: authorizeUser
+      parameters:
+        - name: redirect_type
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "code"
+
+        - name: client_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+
+        - name: redirect_uri
+          in: query
+          required: true
+          schema:
+            type: string
+
+        - name: sessionCookie
+          in: cookie
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '302':
+          summary: redirect to login
+          description: redirect to base url with code
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+                example: "http://localhost:3000/callback?accessCode=134"
+        '400':
+          summary: authorization failed
+          description: authoriztion failed for this client
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+                example: "http://localhost:3000/callback?accessCode=null"
+
+  /api/v1/token:
+    post:
+      tags:
+        - Clients
+      summary: exchange access_code
+      description: exhange access_code for accessToken and refreshToken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTokenRequest"
+
+      responses:
+        '200':
+          description: exchange token response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTokenResponse"
+
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateTokenBadRequest"
 
   /api/v1/refresh:
-    get:
-      response:
-        201:
-          description: ""
-  /api/v1/login:
     post:
-      description: client login
+      summary: generate accessToken and refreshToken
+      tags:
+        - Clients
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+
+      responses:
+        "200":
+          summary: response to get user
+          description: response to get value
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+
   /api/v1/logout:
     post:
+      tags:
+        - Clients
       description: client logout
+      parameters:
+        - name: sessionCookie
+          in: cookie
+          required: true
+          schema:
+            type: string
+            example: JSESSIONID_123
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+
+      responses:
+        '204':
+          description: Logout user by expiring session and refreshToken
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    User:
+      type: object
+      required:
+        - username
+        - firstName
+        - lastName
+        - password
+      properties:
+        username:
+          type: string
+          example: pushp.raj
+          minLength: 3
+          maxLiength: 50
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: Pushp
+        lastName:
+          type: string
+          example: Raj
+          minLength: 1
+          maxLength: 50
+        dateOfBirth:
+          type: string
+          format: date
+          example: 08/11/1999
+        password:
+          type: string
+          format: password
+          minLength: 3
+          example: "****"
+        contactDetails:
+          allOf:
+            - $ref: '#/components/schemas/ContactDetails'
+    ContactDetails:
+      type: object
+      required:
+        - email
+      properties:
+        email:
+          type: string
+          example: pushp.raj@email.com
+        phoneNumber:
+          type: string
+          example: 08043325354
+          pattern: \d{10,11}
+        address:
+          allOf:
+            - $ref: '#/components/schemas/Address'
+
+    Address:
+      type: object
+      properties:
+        line1:
+          type: string
+          example: 1-29
+        line2:
+          type: string
+          example: 2-401
+        city:
+          type: string
+          example: Yokohama
+        prefecture:
+          type: string
+          example: Kanagawa
+        postalCode:
+          type: integer
+          format: int32
+          example: 2260019
+
+    CreateNewUserError:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          example: BAD_REQUEST
+
+
+    CreateTokenRequest:
+      type: object
+      properties:
+        accessCode:
+          type: string
+          example: abc123
+
+    CreateTokenResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: abc1234
+        refreshToken:
+          type: string
+          example: abc2345
+
+    CreateTokenBadRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          example: BAD_REQUEST
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+          example: abc123
+
+    RefreshTokenResponse:
+      type: object
+      required:
+        - refreshToken
+        - accessToken
+      properties:
+        refreshToken:
+          type: string
+        accessToken:
+          type: string
+
+    LogoutRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
