@@ -26,7 +26,7 @@ paths:
           required: true
           schema:
             type: string
-            format: uri
+            format: string
 
       requestBody:
         required: true
@@ -39,16 +39,15 @@ paths:
 
       responses:
         '302':
-          summary: redirect to login
           description: redirect user to login page
           headers:
             Location:
               schema:
                 type: string
-                format: uri
-                example: /login
+                format: string
+
+
         '400':
-          summary: bad requirest
           description: user already exists or any field is missing
           content:
             application/json:
@@ -68,7 +67,6 @@ paths:
           required: true
           schema:
             type: string
-            example: "code"
 
         - name: client_id
           in: query
@@ -91,23 +89,22 @@ paths:
             format: uuid
       responses:
         '302':
-          summary: redirect to login
           description: redirect to base url with code
           headers:
             Location:
               schema:
                 type: string
-                format: uri
-                example: "http://localhost:3000/callback?accessCode=134"
+                examples:
+                  - "http://localhost:3000/callback?accessCode=134"
         '400':
-          summary: authorization failed
           description: authoriztion failed for this client
           headers:
             Location:
               schema:
                 type: string
                 format: uri
-                example: "http://localhost:3000/callback?accessCode=null"
+                examples:
+                  - "http://localhost:3000/callback?accessCode=null"
 
   /api/v1/token:
     post:
@@ -151,7 +148,7 @@ paths:
 
       responses:
         "200":
-          summary: response to get user
+
           description: response to get value
           content:
             application/json:
@@ -170,7 +167,8 @@ paths:
           required: true
           schema:
             type: string
-            example: JSESSIONID_123
+            examples:
+              - JSESSIONID_123
       requestBody:
         content:
           application/json:
@@ -197,28 +195,33 @@ components:
       properties:
         username:
           type: string
-          example: pushp.raj
+          examples:
+            - pushp.raj
           minLength: 3
           maxLiength: 50
         firstName:
           type: string
           minLength: 1
           maxLength: 50
-          example: Pushp
+          examples:
+            - Pushp
         lastName:
           type: string
-          example: Raj
+          examples:
+            - Raj
           minLength: 1
           maxLength: 50
         dateOfBirth:
           type: string
           format: date
-          example: 08/11/1999
+          examples:
+            - 08/11/1999
         password:
           type: string
           format: password
           minLength: 3
-          example: "****"
+          examples:
+            - "****"
         contactDetails:
           allOf:
             - $ref: '#/components/schemas/ContactDetails'
@@ -229,10 +232,12 @@ components:
       properties:
         email:
           type: string
-          example: pushp.raj@email.com
+          examples:
+            - pushp.raj@email.com
         phoneNumber:
           type: string
-          example: 08043325354
+          examples:
+            - 08043325354
           pattern: \d{10,11}
         address:
           allOf:
@@ -243,20 +248,25 @@ components:
       properties:
         line1:
           type: string
-          example: 1-29
+          examples:
+            - 1-29
         line2:
           type: string
-          example: 2-401
+          examples:
+            - 2-401
         city:
           type: string
-          example: Yokohama
+          examples:
+            - Yokohama
         prefecture:
           type: string
-          example: Kanagawa
+          examples:
+            - Kanagawa
         postalCode:
           type: integer
           format: int32
-          example: 2260019
+          examples:
+            - 2260019
 
     CreateNewUserError:
       type: object
@@ -265,7 +275,8 @@ components:
       properties:
         code:
           type: string
-          example: BAD_REQUEST
+          examples:
+            - BAD_REQUEST
 
 
     CreateTokenRequest:
@@ -273,24 +284,28 @@ components:
       properties:
         accessCode:
           type: string
-          example: abc123
+          examples:
+            - abc123
 
     CreateTokenResponse:
       type: object
       properties:
         accessToken:
           type: string
-          example: abc1234
+          examples:
+            - abc1234
         refreshToken:
           type: string
-          example: abc2345
+          examples:
+            - abc2345
 
     CreateTokenBadRequest:
       type: object
       properties:
         code:
           type: string
-          example: BAD_REQUEST
+          examples:
+            - BAD_REQUEST
 
     RefreshTokenRequest:
       type: object
@@ -299,7 +314,8 @@ components:
       properties:
         refreshToken:
           type: string
-          example: abc123
+          examples:
+            - abc123
 
     RefreshTokenResponse:
       type: object
