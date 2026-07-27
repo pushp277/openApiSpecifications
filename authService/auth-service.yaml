@@ -20,12 +20,6 @@ paths:
         - Clients
       operationId: createNewUser
       summary: create new user
-      parameters:
-        - name: Host
-          in: header
-          required: true
-          schema:
-            type: string
 
       requestBody:
         required: true
@@ -37,12 +31,8 @@ paths:
               $ref: "#/components/schemas/User"
 
       responses:
-        '302':
-          description: redirect user to login page
-          headers:
-            Location:
-              schema:
-                type: string
+        '200':
+          description: user created successfully
 
 
         '400':
@@ -152,8 +142,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/RefreshTokenResponse'
 
-  /api/v1/logout:
+  /api/v1/login:
     post:
+      tags:
+        - Clients
+      summary: allow user to login to the system
+      operationId: loginUser
+      description: client login
+      parameters:
+        - name: Host
+          in: header
+          required: true
+          schema:
+            type: string
+            examples:
+              - client.com/callback
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+
+      responses:
+        '304':
+          description: login successful
+          headers:
+            Location:
+              schema:
+                type: string
+                examples:
+                  - client.com/callback?accessToken=abc123
+
+        '400':
+          description: bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginValidationError'
+
+
+  /api/v1/logout:
+    delete:
       tags:
         - Clients
       operationId: logoutUser
@@ -168,7 +197,7 @@ paths:
               - JSESSIONID_123
       requestBody:
         content:
-          application/json:
+          pplication/json:
             schema:
               $ref: '#/components/schemas/LogoutRequest'
 
@@ -328,3 +357,25 @@ components:
       properties:
         refreshToken:
           type: string
+
+    LoginRequest:
+      type: object
+      properties:
+        username:
+          type: string
+          examples:
+            - pushp.raj
+        password:
+          type: string
+          format: password
+          examples:
+            - Strong!P@ssword
+
+    LoginValidationError:
+      type: object
+      properties:
+        message:
+          type: string
+          examples:
+            - user doesn't exist
+
