@@ -11,7 +11,7 @@ servers:
   # Added by API Auto Mocking Plugin
   - description: |
       local-system
-    url: http://localhost:3003/
+    url: http://localhost:8003/
 
 paths:
   /api/v1/create:
@@ -26,7 +26,6 @@ paths:
           required: true
           schema:
             type: string
-            format: string
 
       requestBody:
         required: true
@@ -44,7 +43,6 @@ paths:
             Location:
               schema:
                 type: string
-                format: string
 
 
         '400':
@@ -102,7 +100,6 @@ paths:
             Location:
               schema:
                 type: string
-                format: uri
                 examples:
                   - "http://localhost:3000/callback?accessCode=null"
 
@@ -180,10 +177,6 @@ paths:
           description: Logout user by expiring session and refreshToken
 
 components:
-  securitySchemes:
-    basicAuth:
-      type: http
-      scheme: basic
   schemas:
     User:
       type: object
@@ -198,7 +191,7 @@ components:
           examples:
             - pushp.raj
           minLength: 3
-          maxLiength: 50
+          maxLength: 50
         firstName:
           type: string
           minLength: 1
@@ -215,13 +208,13 @@ components:
           type: string
           format: date
           examples:
-            - 08/11/1999
+            - 1999-11-08
         password:
           type: string
           format: password
           minLength: 3
           examples:
-            - "****"
+            - "Strong!P@ssword"
         contactDetails:
           allOf:
             - $ref: '#/components/schemas/ContactDetails'
@@ -238,7 +231,7 @@ components:
           type: string
           examples:
             - 08043325354
-          pattern: \d{10,11}
+          pattern: "^\\d{10,11}$"
         address:
           allOf:
             - $ref: '#/components/schemas/Address'
