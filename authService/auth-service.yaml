@@ -3,7 +3,7 @@ info:
   title: auth-service
   version: 1.0.0
   description: |
-    auth-service is an identity provider to authenticate and authorize clients
+    auth-service is an identity provider to authenticate and authorize client api
   contact:
     name: Raj, Pushp
     email: pushp277@gmail.com
@@ -17,7 +17,7 @@ paths:
   /api/v1/create:
     post:
       tags:
-        - Clients
+        - client api
       operationId: createNewUser
       summary: create new user
 
@@ -46,7 +46,7 @@ paths:
   /api/v1/authorize:
     get:
       tags:
-        - Clients
+        - client api
       summary: authorize user
       operationId: authorizeUser
       parameters:
@@ -96,7 +96,7 @@ paths:
   /api/v1/token:
     post:
       tags:
-        - Clients
+        - client api
       summary: exchange access_code
       operationId: exchangeToken
       description: exhange access_code for accessToken and refreshToken
@@ -126,7 +126,7 @@ paths:
       summary: generate accessToken and refreshToken
       operationId: generateRefreshToken
       tags:
-        - Clients
+        - client api
       requestBody:
         content:
           application/json:
@@ -145,7 +145,7 @@ paths:
   /api/v1/login:
     post:
       tags:
-        - Clients
+        - client api
       summary: allow user to login to the system
       operationId: loginUser
       description: client login
@@ -183,8 +183,9 @@ paths:
 
   /api/v1/logout:
     delete:
+      summary: revoke user refresh token and session
       tags:
-        - Clients
+        - client api
       operationId: logoutUser
       description: client logout
       parameters:
@@ -197,13 +198,69 @@ paths:
               - JSESSIONID_123
       requestBody:
         content:
-          pplication/json:
+          application/json:
             schema:
               $ref: '#/components/schemas/LogoutRequest'
 
       responses:
         '204':
           description: Logout user by expiring session and refreshToken
+
+
+  /api/oauth2/github/callback:
+    get:
+      summary: callback with code and state
+      tags:
+        - "outh2 callback"
+      operationId: githubCallback
+      description: callback send by github id provider
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+            example: ABC123
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+            example: xyz
+
+      responses:
+        '302':
+          description: found response send by github oauth2
+          content:
+            application/json:
+
+  /api/oauth2/google/callback:
+    get:
+      summary: callback with code and state
+      tags:
+        - "outh2 callback"
+      operationId: googleCallback
+      description: callback send by google id provider
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+            example: ABC123
+        - name: state
+          in: query
+          required: true
+          schema:
+            type: string
+            example: xyz
+
+      responses:
+        '302':
+          description: found response send by google oauth2
+          content:
+            application/json:
+
 
 components:
   schemas:
