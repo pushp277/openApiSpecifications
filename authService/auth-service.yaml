@@ -149,14 +149,6 @@ paths:
       summary: allow user to login to the system
       operationId: loginUser
       description: client login
-      parameters:
-        - name: Host
-          in: header
-          required: true
-          schema:
-            type: string
-            examples:
-              - client.com/callback
       requestBody:
         content:
           application/json:
@@ -164,14 +156,13 @@ paths:
               $ref: '#/components/schemas/LoginRequest'
 
       responses:
-        '304':
+        '200':
           description: login successful
-          headers:
-            Location:
+          content:
+            application/json:
               schema:
-                type: string
-                examples:
-                  - client.com/callback?accessToken=abc123
+                $ref: '#/components/schemas/LoginResponse'
+
 
         '400':
           description: bad request
@@ -196,11 +187,6 @@ paths:
             type: string
             examples:
               - JSESSIONID_123
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/LogoutRequest'
 
       responses:
         '204':
@@ -231,8 +217,9 @@ paths:
       responses:
         '302':
           description: found response send by github oauth2
-          content:
-            application/json:
+
+        '400':
+          description: Validation Error
 
   /api/oauth2/google/callback:
     get:
@@ -258,8 +245,9 @@ paths:
       responses:
         '302':
           description: found response send by google oauth2
-          content:
-            application/json:
+
+        '400':
+          description: Vaidation Error
 
 
 components:
@@ -427,6 +415,14 @@ components:
           format: password
           examples:
             - Strong!P@ssword
+
+    LoginResponse:
+      type: object
+      properties:
+        accessCode:
+          type: string
+          examples:
+            - abcd123==
 
     LoginValidationError:
       type: object
