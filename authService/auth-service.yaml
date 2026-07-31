@@ -50,12 +50,6 @@ paths:
       summary: authorize user
       operationId: authorizeUser
       parameters:
-        - name: redirect_type
-          in: query
-          required: true
-          schema:
-            type: string
-
         - name: client_id
           in: query
           required: true
@@ -75,6 +69,11 @@ paths:
           schema:
             type: string
             format: uuid
+        - name: scope
+          in: query
+          schema:
+            type: string
+
       responses:
         '302':
           description: redirect to base url with code
@@ -83,7 +82,13 @@ paths:
               schema:
                 type: string
                 examples:
-                  - "http://localhost:3000/callback?accessCode=134"
+                  - "http://localhost:3000/login?accessCode=134"
+            Set-Cookie:
+              description: Successful
+              schema:
+                type: string
+                examples:
+                  - JSESSIONID=abcde12345; Path=/; HttpOnly; Secure
         '400':
           description: authoriztion failed for this client
           headers:
