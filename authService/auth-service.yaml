@@ -43,7 +43,7 @@ paths:
                 $ref: '#/components/schemas/CreateNewUserError'
 
 
-  /api/v1/authorize:
+  /api/v1/oauth2/authorize:
     get:
       tags:
         - client api
@@ -55,7 +55,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
 
         - name: redirect_uri
           in: query
@@ -63,12 +62,12 @@ paths:
           schema:
             type: string
 
-        - name: sessionCookie
+        - name: session
           in: cookie
           required: false
           schema:
             type: string
-            format: uuid
+
         - name: scope
           in: query
           schema:
@@ -98,7 +97,7 @@ paths:
                 examples:
                   - "http://localhost:3000/callback?accessCode=null"
 
-  /api/v1/token:
+  /api/v1/oauth2/token:
     post:
       tags:
         - client api
@@ -126,7 +125,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/CreateTokenBadRequest"
 
-  /api/v1/refresh:
+  /api/v1/oauth2/refresh:
     post:
       summary: generate accessToken and refreshToken
       operationId: generateRefreshToken
@@ -156,7 +155,7 @@ paths:
       description: client login
       requestBody:
         content:
-          application/json:
+          application/x-wwww-form-urlencoded:
             schema:
               $ref: '#/components/schemas/LoginRequest'
 
@@ -409,17 +408,10 @@ components:
           type: string
 
     LoginRequest:
-      type: object
-      properties:
-        username:
-          type: string
-          examples:
-            - pushp.raj
-        password:
-          type: string
-          format: password
-          examples:
-            - Strong!P@ssword
+      type: string
+      examples:
+        - pushp.raj&Strong!P@ssword
+
 
     LoginResponse:
       type: object
