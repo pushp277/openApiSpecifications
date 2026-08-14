@@ -105,6 +105,7 @@ paths:
       operationId: exchangeToken
       description: exhange access_code for accessToken and refreshToken
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -352,12 +353,23 @@ components:
 
     CreateTokenRequest:
       type: object
+      required:
+        - authorization-code
+        - client-id
+        - client-secret
       properties:
-        accessCode:
+        authorization-code:
           type: string
           examples:
             - abc123
-
+        client-id:
+          type: string
+          examples:
+            - client-id
+        client-secret:
+          type: string
+          examples:
+            - client-srecet
     CreateTokenResponse:
       type: object
       properties:
