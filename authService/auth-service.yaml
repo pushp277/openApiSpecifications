@@ -254,6 +254,19 @@ paths:
         '400':
           description: Vaidation Error
 
+  /api/v1/timestamp:
+    get:
+      tags:
+        - timestamp
+      operationId: timestamp
+      responses:
+        '200':
+          description: current system time
+          content:
+            appliction/json:
+              schema:
+                $ref: '#/components/schemas/TimestampResponse'
+
 
 components:
   schemas:
@@ -474,5 +487,13 @@ components:
           type: string
           examples:
             - SageDelta
+            -
+    TimestampResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          examples:
+            - "35345435"
 
 
