@@ -441,3 +441,38 @@ components:
           examples:
             - user doesn't exist
 
+    JWTClaims:
+      type: object
+      properties:
+        jti:
+          type: string
+          examples:
+            - abc123
+        aud: # client Id
+          type: string
+          examples:
+            - "11001"
+        exp:
+          type: number
+          format: int64
+          examples:
+            - 23434235
+        iat:
+          type: number
+          format: int64
+          examples:
+            - 23434235
+        role:
+          type: string
+          examples:
+            - "USER"
+        sub: # username
+          type: string
+          examples:
+            - pushp.raj
+        iss:
+          type: string
+          examples:
+            - SageDelta
+
+
