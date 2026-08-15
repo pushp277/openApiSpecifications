@@ -453,12 +453,12 @@ components:
           examples:
             - "11001"
         exp:
-          type: number
+          type: integer
           format: int64
           examples:
             - 23434235
         iat:
-          type: number
+          type: integer
           format: int64
           examples:
             - 23434235
