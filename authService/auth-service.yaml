@@ -17,7 +17,7 @@ paths:
   /api/v1/create:
     post:
       tags:
-        - client api
+        - Id provider
       operationId: createNewUser
       summary: create new user
 
@@ -46,7 +46,7 @@ paths:
   /api/v1/oauth2/authorize:
     get:
       tags:
-        - client api
+        - Id provider
       summary: authorize user
       operationId: authorizeUser
       parameters:
@@ -147,56 +147,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/RefreshTokenResponse'
 
-  /api/v1/login:
-    post:
-      tags:
-        - client api
-      summary: allow user to login to the system
-      operationId: loginUser
-      description: client login
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/LoginRequest'
-
-      responses:
-        '200':
-          description: login successful
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LoginResponse'
-
-
-        '400':
-          description: bad request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LoginValidationError'
-
-
-  /api/v1/logout:
-    delete:
-      summary: revoke user refresh token and session
-      tags:
-        - client api
-      operationId: logoutUser
-      description: client logout
-      parameters:
-        - name: SESSION_
-          in: cookie
-          required: true
-          schema:
-            type: string
-            examples:
-              - JSESSIONID_123
-
-      responses:
-        '204':
-          description: Logout user by expiring session and refreshToken
-
 
   /api/oauth2/github/callback:
     get:
@@ -263,7 +213,7 @@ paths:
         '200':
           description: current system time
           content:
-            appliction/json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/TimestampResponse'
 
@@ -407,12 +357,16 @@ components:
       type: object
       required:
         - refreshToken
+        - clientId
       properties:
         refreshToken:
           type: string
           examples:
             - abc123
-
+        clientId:
+          type: string
+          examples:
+            - client12345
     RefreshTokenResponse:
       type: object
       required:
@@ -423,36 +377,6 @@ components:
           type: string
         accessToken:
           type: string
-
-    LogoutRequest:
-      type: object
-      required:
-        - refreshToken
-      properties:
-        refreshToken:
-          type: string
-
-    LoginRequest:
-      type: string
-      examples:
-        - pushp.raj&Strong!P@ssword
-
-
-    LoginResponse:
-      type: object
-      properties:
-        accessCode:
-          type: string
-          examples:
-            - abcd123==
-
-    LoginValidationError:
-      type: object
-      properties:
-        message:
-          type: string
-          examples:
-            - user doesn't exist
 
     JWTClaims:
       type: object
@@ -495,5 +419,3 @@ components:
           type: string
           examples:
             - "35345435"
-
-
