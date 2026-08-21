@@ -416,6 +416,14 @@ components:
       type: object
       properties:
         timestamp:
+          type: integer
+          format: int64
+          examples:
+            - 35345435
+    LoginValidationError:
+      type: object
+      properties:
+        message:
           type: string
           examples:
-            - "35345435"
+            - user doesn't exist
