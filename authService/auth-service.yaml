@@ -148,26 +148,13 @@ paths:
                 $ref: '#/components/schemas/RefreshTokenResponse'
 
 
-  /api/oauth2/github/callback:
+  /api/v1/oauth2/github/callback:
     get:
       summary: callback with code and state
       tags:
         - "outh2 callback"
       operationId: githubCallback
       description: callback send by github id provider
-      parameters:
-        - name: code
-          in: query
-          required: true
-          schema:
-            type: string
-            example: ABC123
-        - name: state
-          in: query
-          required: true
-          schema:
-            type: string
-            example: xyz
 
       responses:
         '302':
@@ -176,31 +163,15 @@ paths:
         '400':
           description: Validation Error
 
-  /api/oauth2/google/callback:
+  /api/v1/oauth2/google/callback:
     get:
       summary: callback with code and state
       tags:
         - "outh2 callback"
       operationId: googleCallback
       description: callback send by google id provider
-      parameters:
-        - name: code
-          in: query
-          required: true
-          schema:
-            type: string
-            example: ABC123
-        - name: state
-          in: query
-          required: true
-          schema:
-            type: string
-            example: xyz
 
       responses:
-        '302':
-          description: found response send by google oauth2
-
         '400':
           description: Vaidation Error
 
