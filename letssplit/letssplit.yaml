@@ -1,0 +1,232 @@
+openapi: 3.1.0
+info:
+  title: Let's Split
+  version: 1.0.0
+  description: |
+    Application to split bills between friend and among group of friends
+  contact:
+    name: Raj, Pushp
+    email: pushp277@gmail.com
+servers:
+  - description: |
+      local-servers
+    url: localhost:8010
+  - description: |
+      prod-url
+    url: lets-split.local
+
+paths:
+  /api/v1/add-splitter:
+    post:
+      tags:
+        - Splitter Api
+      description: |
+        add splitter to your splitter list
+      summary: add splitter, friends, family or stranger
+      parameters:
+        - name: X-USER-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: X-CORRELATION-ID
+          in: header
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddSplitterRequest"
+      responses:
+        "201":
+          description: |
+            Splitter added successfully
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - successful
+        "400":
+          description: |
+            Splitter doesn't exist
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - Splitter doesn't exist
+
+  /api/v1/settle-up/{splitterId}:
+    put:
+      description: |
+        settle-up with splitter
+      summary: settle up with splitter
+      tags:
+        - Splitter Api
+      parameters:
+        - name: splitterId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: X-USER-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: X-CORRELATION-ID
+          in: header
+          schema:
+            type: string
+      responses:
+        "200":
+          description: |
+            SettleUp with splitter
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - successful
+
+        "400":
+          description: |
+            Splitter doesn't exist
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - Splitter doesn't exist
+
+  /api/v1/create-group:
+    post:
+      description: |
+        Splitter Api
+      summary: create group
+      tags:
+        - Splitter Api
+      parameters:
+        - name: X-USER-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: X-CORRELATION-ID
+          in: header
+          schema:
+            type: string
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGroupRequest'
+      responses:
+        "201":
+          description: |
+            Create group
+          content:
+            plain/text:
+              schema:
+                type: string
+                examples:
+                  - group created successfully
+        "400":
+          description: |
+            Splitter doesn't exist
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - splitter or group doesn't exist
+
+
+
+  /api/v1/add-expense:
+    post:
+      tags:
+        - User Api
+      description: |
+        add expenses individually
+      summary: add expenses
+      parameters:
+        - name: X-USER-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: X-CORRELATION-ID
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: |
+          required to add expense
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddExpense'
+      responses:
+        "201":
+          description: |
+            user expense added
+
+components:
+  schemas:
+    AddSplitterRequest:
+      type: object
+      required:
+        - splitterId
+      properties:
+        splitterId:
+          type: string
+          examples:
+            - s123
+        relation:
+          type: string
+          examples:
+            - friend
+            - stranger
+            - familyMemeber
+
+
+    AddExpense:
+      type: object
+      properties:
+        recipientId:
+          type: string
+          examples:
+            - r123
+        amount:
+          type: number
+          format: int64
+          examples:
+            - -23423
+        currenty:
+          type: string
+          examples:
+            - YEN
+        context:
+          type: string
+          examples:
+            - Shopping
+    CreateGroupRequest:
+      type: object
+      properties:
+        groupId:
+          type: string
+          examples:
+            - g1233
+        splitters:
+          type: array
+          items:
+            type: string
+            examples:
+              - s123, s234
+
+
