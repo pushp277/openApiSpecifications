@@ -144,12 +144,53 @@ paths:
                 examples:
                   - splitter or group doesn't exist
 
+  /api/v1/group/settle-up/{groupId}:
+    put:
+      description: |
+        Splitter Api
+      summary: create group
+      tags:
+        - Splitter Api
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: X-USER-ID
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: X-CORRELATION-ID
+          in: header
+          schema:
+            type: string
 
+      responses:
+        "201":
+          description: |
+            Settled up in the group
+          content:
+            plain/text:
+              schema:
+                type: string
+                examples:
+                  - group created successfully
+        "400":
+          description: |
+            Splitter doesn't exist
+          content:
+            text/plain:
+              schema:
+                type: string
+                examples:
+                  - splitter or group doesn't exist
 
   /api/v1/add-expense:
     post:
       tags:
-        - User Api
+        - Splitter Api
       description: |
         add expenses individually
       summary: add expenses
